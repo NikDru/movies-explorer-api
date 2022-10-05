@@ -1,7 +1,7 @@
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'https://vafnt.mesto.nomoredomains.sbs',
-  'http://vafnt.mesto.nomoredomains.sbs',
+  'https://movies-board.diploma.nomoredomains.icu',
+  'http://movies-board.diploma.nomoredomains.icu',
   'localhost:3000',
   'http://localhost:3000',
   'https://localhost:3000',
