@@ -3,6 +3,14 @@ const emailValidator = require('validator');
 const bcrypt = require('bcryptjs');
 const { NotAuthorizedError } = require('../errors');
 
+/* Пример фильма (для упрощения тестирования)
+{
+  "name": "Nik",
+  "email": "123@123.com",
+  "password": "123"
+}
+*/
+
 const userSchema = new mongoose.Schema(
   {
     email: {

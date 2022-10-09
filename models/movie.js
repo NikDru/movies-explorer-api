@@ -1,6 +1,21 @@
 const mongoose = require('mongoose');
 const { NotFoundError, ForbiddenError } = require('../errors');
 
+/* Пример фильма (для упрощения тестирования)
+{
+  "country": "Russia",
+  "director": "123",
+  "duration": 123,
+  "year": "2020",
+  "description": "dddd",
+  "image": "Url link image",
+  "trailerLink": "Url link trailer",
+  "thumbnail": "Url link thumbnail",
+  "nameRU": "Filmn2",
+  "nameEN": "film2"
+}
+*/
+
 const movieSchema = new mongoose.Schema(
   {
     country: {

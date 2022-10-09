@@ -2,22 +2,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
-const { login, createUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
+const router = require('./routes');
 const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { ValidateUserBodyForSignUp, ValidateUserBodyForSignIn } = require('./utils/JoiValidators');
 require('dotenv').config();
-const { NotFoundError } = require('./errors');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGO_ADDRESS = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(MONGO_ADDRESS, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -27,19 +24,7 @@ app.use(cors);
 
 app.use(requestLogger);
 
-app.post('/signup', ValidateUserBodyForSignUp, createUser);
-
-app.post('/signin', ValidateUserBodyForSignIn, login);
-
-app.use(auth);
-
-app.use('/users', require('./routes/users'));
-
-app.use('/movies', require('./routes/movies'));
-
-app.use((req, res, next) => {
-  next(new NotFoundError('Конечная точка не найдена'));
-});
+app.use(router);
 
 app.use(errorLogger);
 

@@ -2,7 +2,7 @@ const { celebrate, Joi } = require('celebrate');
 
 module.exports.ValidateUserBodyForSignUp = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
+    email: Joi.string().email().required(),
     password: Joi.string().required(),
     name: Joi.string().min(2).max(30).required(),
   }),
@@ -10,15 +10,15 @@ module.exports.ValidateUserBodyForSignUp = celebrate({
 
 module.exports.ValidateUserBodyForSignIn = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
+    email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
 });
 
 module.exports.ValidateUserBodyForNameMail = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    name: Joi.string().required().min(2).max(30),
+    email: Joi.string().email().required(),
+    name: Joi.string().min(2).max(30).required(),
   }),
 });
 
