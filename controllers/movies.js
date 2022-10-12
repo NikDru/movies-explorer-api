@@ -21,6 +21,7 @@ module.exports.createMovie = (req, res, next) => {
     thumbnail,
     nameRU,
     nameEN,
+    movieId,
   } = req.body;
   const owner = req.user._id;
 
@@ -36,11 +37,10 @@ module.exports.createMovie = (req, res, next) => {
     owner,
     nameRU,
     nameEN,
+    movieId,
   })
     .then((movie) => movie.populate(['owner']).execPopulate())
-    .then((movie) => {
-      res.send(movie);
-    })
+    .then((movie) => res.send(movie))
     .catch((error) => {
       if (error._message === 'user validation failed' || error._message === 'Validation failed') {
         next(new InvalidDataError('Ошибка входных данных'));
@@ -52,17 +52,13 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findMovieAndCheckOwner(req.params.movieId, req.user._id)
-    .then((movie) => {
-      Movie.findByIdAndRemove(
-        movie._id,
-        (err, deletedMovie) => {
-          if (!deletedMovie) {
-            next(new Error('Ошибка на сервере'));
-          } else {
-            res.status(SUCCESS_CODE).send({ message: 'Фильм удален' });
-          }
-        },
-      );
+    .then((movie) => Movie.findByIdAndRemove(movie._id).exec())
+    .then((deletedMovie) => {
+      if (!deletedMovie) {
+        next(new Error('Ошибка на сервере'));
+      } else {
+        res.status(SUCCESS_CODE).send({ message: 'Фильм удален' });
+      }
     })
-    .catch(next);
+    .catch((err) => next(err));
 };

@@ -52,35 +52,38 @@ module.exports.login = (req, res, next) => {
       );
       res.send({ token });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch((err) => next(err));
 };
 
 module.exports.getUserInfo = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
     .then((users) => res.status(SUCCESS_CODE).send(users))
-    .catch(() => next(new Error('Ошибка на сервере')));
+    .catch((err) => next(err));
 };
 
 module.exports.changeUserInfo = (req, res, next) => {
   const { name: newName, email: newEmail } = req.body;
-
-  User.findByIdAndUpdate(
-    req.user._id,
-    { name: newName, email: newEmail },
-    {
-      new: true,
-      runValidators: true,
-      upsert: false,
-    },
-    (err, user) => {
+  User.checkEmailForChange(req.user._id, newEmail)
+    .then(() => User.findByIdAndUpdate(
+      req.user._id,
+      {
+        name: newName,
+        email: newEmail,
+      },
+      {
+        new: true,
+        runValidators: true,
+        upsert: false,
+      },
+    )
+      .exec())
+    .then((user) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
       } else {
         res.status(SUCCESS_CODE).send(user);
       }
-    },
-  );
+    })
+    .catch((err) => next(err));
 };

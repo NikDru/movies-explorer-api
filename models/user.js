@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const emailValidator = require('validator');
 const bcrypt = require('bcryptjs');
-const { NotAuthorizedError } = require('../errors');
+const { NotAuthorizedError, AlreadyExistError } = require('../errors');
 
 /* Пример фильма (для упрощения тестирования)
 {
@@ -55,6 +55,16 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
           }
           return user;
         });
+    });
+};
+
+userSchema.statics.checkEmailForChange = function findMovieAndCheckOwner(id, newMail) {
+  return this.findOne({ email: newMail })
+    .then((user) => {
+      if (user && String(user._id) !== id) {
+        return Promise.reject(new AlreadyExistError('Данный email не может быть использован!'));
+      }
+      return Promise.resolve();
     });
 };
 

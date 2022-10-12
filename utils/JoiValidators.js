@@ -30,7 +30,6 @@ module.exports.ValidateMovieID = celebrate({
 
 module.exports.ValidateMovieBody = celebrate({
   body: Joi.object().keys({
-    // TODO: Сделать валидацию для всех полей в муви
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
@@ -41,5 +40,6 @@ module.exports.ValidateMovieBody = celebrate({
     thumbnail: Joi.string().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
+    movieId: Joi.number().required(),
   }),
 });
