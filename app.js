@@ -7,7 +7,7 @@ const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 require('dotenv').config();
 
-// Если файл .env существует, то адрес сервера возьмется из него, иначе используется по умолчанию
+// Если файл .env существует, то адрес сервера возьмется из него
 const { PORT = 3000, MONGO_ADDRESS = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 
 const app = express();
